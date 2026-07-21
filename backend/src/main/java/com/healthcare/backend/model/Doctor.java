@@ -1,6 +1,15 @@
 package com.healthcare.backend.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "doctors")
@@ -11,17 +20,27 @@ public class Doctor {
     @Column(name = "doctor_id")
     private Long doctorId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user;
-
-    @Column(length = 100)
+    @Column(name = "specialization", nullable = false, length = 100)
     private String specialization;
 
-    @Column(name = "availability_status", length = 30)
-    private String availabilityStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "availability_status", nullable = false, length = 30)
+    private AvailabilityStatus availabilityStatus = AvailabilityStatus.AVAILABLE;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Doctor() {
+    }
+
+    public Doctor(String specialization,
+                  AvailabilityStatus availabilityStatus,
+                  User user) {
+
+        this.specialization = specialization;
+        this.availabilityStatus = availabilityStatus;
+        this.user = user;
     }
 
     public Long getDoctorId() {
@@ -32,14 +51,6 @@ public class Doctor {
         this.doctorId = doctorId;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public String getSpecialization() {
         return specialization;
     }
@@ -48,11 +59,19 @@ public class Doctor {
         this.specialization = specialization;
     }
 
-    public String getAvailabilityStatus() {
+    public AvailabilityStatus getAvailabilityStatus() {
         return availabilityStatus;
     }
 
-    public void setAvailabilityStatus(String availabilityStatus) {
+    public void setAvailabilityStatus(AvailabilityStatus availabilityStatus) {
         this.availabilityStatus = availabilityStatus;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
