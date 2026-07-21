@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import "./App.css";
 
 function Placeholder({ title }) {
@@ -21,8 +22,21 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Placeholder title="Login" />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Placeholder title="Register" />} />
+
+          <Route 
+            path="/patient" 
+            element={<Placeholder title="Patient Dashboard" />} 
+          />
+          <Route
+            path="/clinic"
+            element={<Placeholder title="Clinic Dashboard" />}
+          />
+          <Route
+            path="/admin"
+            element={<Placeholder title="Admin Dashboard" />}
+          />
         </Routes>
 
         <Footer />
