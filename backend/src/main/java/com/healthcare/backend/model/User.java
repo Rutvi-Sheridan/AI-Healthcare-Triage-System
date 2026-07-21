@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,11 +30,13 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 30)
-    private String role;
+    private Role role;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
-    private String status;
+    private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -44,8 +48,8 @@ public class User {
             String name,
             String emailId,
             String passwordHash,
-            String role,
-            String status) {
+            Role role,
+            UserStatus status) {
 
         this.name = name;
         this.emailId = emailId;
@@ -58,6 +62,10 @@ public class User {
     public void setCreatedAtAutomatically() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+
+        if (status == null) {
+            status = UserStatus.ACTIVE;
         }
     }
 
@@ -93,19 +101,19 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 
