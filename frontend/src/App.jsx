@@ -1,47 +1,34 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
+import PatientDashboard from "./pages/PatientDashboard";
+import StaffDashboard from "./pages/StaffDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import "./App.css";
-
-function Placeholder({ title }) {
-  return (
-    <main className="page-container">
-      <h1>{title}</h1>
-      <p>This page will be created in the next feature branch.</p>
-    </main>
-  );
-}
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Navbar />
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Placeholder title="Register" />} />
+      <Route path="/login" element={<Login />} />
 
-          <Route 
-            path="/patient" 
-            element={<Placeholder title="Patient Dashboard" />} 
-          />
-          <Route
-            path="/clinic"
-            element={<Placeholder title="Clinic Dashboard" />}
-          />
-          <Route
-            path="/admin"
-            element={<Placeholder title="Admin Dashboard" />}
-          />
-        </Routes>
+      <Route
+        path="/patient/dashboard"
+        element={<PatientDashboard />}
+      />
 
-        <Footer />
-      </div>
-    </BrowserRouter>
+      <Route
+        path="/staff/dashboard"
+        element={<StaffDashboard />}
+      />
+
+      <Route
+        path="/admin/dashboard"
+        element={<AdminDashboard />}
+      />
+
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }
 
