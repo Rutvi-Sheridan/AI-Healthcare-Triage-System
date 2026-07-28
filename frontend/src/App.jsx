@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SymptomIntake from "./pages/SymptomIntake";
 import PatientHistory from "./pages/PatientHistory";
 import PatientAppointments from "./pages/PatientAppointments";
+import TriageResult from "./pages/TriageResult";
 
 function App() {
   return (
@@ -32,6 +33,11 @@ function App() {
       <Route
         path="/patient/symptom-intake"
         element={<SymptomIntake />}
+      />
+
+      <Route
+        path="/patient/cases/:caseId"
+        element={<TriageResult />}
       />
 
       <Route
