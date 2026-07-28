@@ -126,11 +126,12 @@ mvn spring-boot:run
 
 Using Maven Wrapper
 
+
 Windows
 
-```bash
-mvnw.cmd spring-boot:run
-```
+<!-- ```bash
+.\mvnw.cmd spring-boot:run 
+``` -->
 
 Mac/Linux
 
