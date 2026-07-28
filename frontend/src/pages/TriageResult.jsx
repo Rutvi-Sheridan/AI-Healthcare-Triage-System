@@ -1,9 +1,50 @@
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  Link,
+  useLocation,
+  useParams,
+} from "react-router-dom";
+import { getTriageCase } from "../services/triageService";
 import "./TriageResult.css";
 
 function TriageResult() {
+  const { caseId } = useParams();
   const location = useLocation();
-  const triageCase = location.state?.triageCase;
+
+  const [triageCase, setTriageCase] = useState(
+    location.state?.triageCase || null
+  );
+
+  const [loading, setLoading] = useState(
+    !location.state?.triageCase
+  );
+
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (triageCase) {
+      return;
+    }
+
+    const loadCase = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getTriageCase(caseId);
+        setTriageCase(data);
+      } catch (requestError) {
+        setError(
+          requestError.message ||
+            "Unable to load this triage case."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCase();
+  }, [caseId, triageCase]);
 
   const formatText = (value) => {
     if (!value) {
@@ -18,18 +59,29 @@ function TriageResult() {
       );
   };
 
-  if (!triageCase) {
+  if (loading) {
+    return (
+      <main className="triage-result-page">
+        <section className="triage-result-card">
+          <p>Loading triage case...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (error || !triageCase) {
     return (
       <main className="triage-result-page">
         <section className="triage-result-card">
           <h1>Result unavailable</h1>
 
           <p>
-            The triage result could not be loaded.
+            {error ||
+              "The triage result could not be loaded."}
           </p>
 
-          <Link to="/patient/dashboard">
-            Return to dashboard
+          <Link to="/patient/history">
+            Return to triage history
           </Link>
         </section>
       </main>
@@ -40,10 +92,10 @@ function TriageResult() {
     <main className="triage-result-page">
       <section className="triage-result-card">
         <p className="result-eyebrow">
-          Intake submitted
+          Triage case #{triageCase.caseId}
         </p>
 
-        <h1>Your initial triage result</h1>
+        <h1>Your triage result</h1>
 
         <div
           className={`result-urgency result-${triageCase.urgencyLevel?.toLowerCase()}`}
@@ -76,6 +128,11 @@ function TriageResult() {
           </p>
         </div>
 
+        <div className="result-section">
+          <h2>Case status</h2>
+          <p>{formatText(triageCase.status)}</p>
+        </div>
+
         <div className="result-disclaimer">
           This is an intake-support recommendation and not a
           medical diagnosis. A healthcare professional should
@@ -84,10 +141,10 @@ function TriageResult() {
 
         <div className="result-actions">
           <Link
-            to="/patient/dashboard"
+            to="/patient/history"
             className="result-secondary-button"
           >
-            Return to dashboard
+            Return to history
           </Link>
 
           <Link
