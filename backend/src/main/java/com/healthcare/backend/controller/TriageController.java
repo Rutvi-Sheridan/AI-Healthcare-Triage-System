@@ -1,107 +1,74 @@
 package com.healthcare.backend.controller;
 
-import com.healthcare.backend.model.TriageCase;
-import com.healthcare.backend.repository.TriageCaseRepository;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.healthcare.backend.dto.TriageRequest;
+import com.healthcare.backend.dto.TriageResponse;
+import com.healthcare.backend.model.TriageStatus;
+import com.healthcare.backend.service.TriageService;
+
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/triage")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/triage-cases")
 public class TriageController {
 
-    private final TriageCaseRepository triageCaseRepository;
+    private final TriageService triageService;
 
     public TriageController(
-            TriageCaseRepository triageCaseRepository) {
-        this.triageCaseRepository = triageCaseRepository;
+            TriageService triageService) {
+
+        this.triageService = triageService;
     }
 
-    // Test endpoint
-    @GetMapping("/test")
-    public String testApi() {
-        return "Triage API is working!";
-    }
-
-    // GET all triage cases
-    @GetMapping
-    public ResponseEntity<List<TriageCase>> getAllTriageCases() {
-        return ResponseEntity.ok(triageCaseRepository.findAll());
-    }
-
-    // GET one triage case
-    @GetMapping("/{id}")
-    public ResponseEntity<TriageCase> getTriageCaseById(
-            @PathVariable Long id) {
-
-        return triageCaseRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // CREATE triage case
     @PostMapping
-    public ResponseEntity<TriageCase> createTriageCase(
-            @RequestBody TriageCase triageCase) {
-
-        TriageCase savedCase =
-                triageCaseRepository.save(triageCase);
+    public ResponseEntity<TriageResponse> createCase(
+            @Valid @RequestBody TriageRequest request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(savedCase);
+                .body(triageService.createCase(request));
     }
 
-    // UPDATE triage case
-    @PutMapping("/{id}")
-    public ResponseEntity<TriageCase> updateTriageCase(
-            @PathVariable Long id,
-            @RequestBody TriageCase updatedCase) {
+    @GetMapping
+    public ResponseEntity<List<TriageResponse>>
+            getAllCases() {
 
-        return triageCaseRepository.findById(id)
-                .map(existingCase -> {
-                    existingCase.setChiefComplaint(
-                            updatedCase.getChiefComplaint());
-
-                    existingCase.setRecommendation(
-                            updatedCase.getRecommendation());
-
-                    existingCase.setRedFlagFound(
-                            updatedCase.isRedFlagFound());
-
-                    existingCase.setStatus(
-                            updatedCase.getStatus());
-
-                    existingCase.setUrgencyLevel(
-                            updatedCase.getUrgencyLevel());
-
-                    existingCase.setPatient(
-                            updatedCase.getPatient());
-
-                    existingCase.setAssignedDoctor(
-                            updatedCase.getAssignedDoctor());
-
-                    TriageCase savedCase =
-                            triageCaseRepository.save(existingCase);
-
-                    return ResponseEntity.ok(savedCase);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(
+                triageService.getAllCases()
+        );
     }
 
-    // DELETE triage case
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTriageCase(
-            @PathVariable Long id) {
+    @GetMapping("/{caseId}")
+    public ResponseEntity<TriageResponse> getCase(
+            @PathVariable Long caseId) {
 
-        if (!triageCaseRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(
+                triageService.getCaseById(caseId)
+        );
+    }
 
-        triageCaseRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<TriageResponse>>
+            getPatientCases(
+                    @PathVariable Long patientId) {
+
+        return ResponseEntity.ok(
+                triageService.getPatientCases(patientId)
+        );
+    }
+
+    @PatchMapping("/{caseId}/status")
+    public ResponseEntity<TriageResponse> updateStatus(
+            @PathVariable Long caseId,
+            @RequestParam TriageStatus status) {
+
+        return ResponseEntity.ok(
+                triageService.updateStatus(caseId, status)
+        );
     }
 }

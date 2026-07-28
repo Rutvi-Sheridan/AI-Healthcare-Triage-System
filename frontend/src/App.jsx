@@ -1,33 +1,70 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
 import "./App.css";
 
-function Placeholder({ title }) {
-  return (
-    <main className="page-container">
-      <h1>{title}</h1>
-      <p>This page will be created in the next feature branch.</p>
-    </main>
-  );
-}
+import {
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+
+import Login from "./pages/Login";
+import PatientDashboard from "./pages/PatientDashboard";
+import StaffDashboard from "./pages/StaffDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import SymptomIntake from "./pages/SymptomIntake";
+import PatientHistory from "./pages/PatientHistory";
+import PatientAppointments from "./pages/PatientAppointments";
+import TriageResult from "./pages/TriageResult";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="app">
-        <Navbar />
+    <Routes>
+      <Route
+        path="/"
+        element={<Navigate to="/login" replace />}
+      />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Placeholder title="Login" />} />
-          <Route path="/register" element={<Placeholder title="Register" />} />
-        </Routes>
+      <Route path="/login" element={<Login />} />
 
-        <Footer />
-      </div>
-    </BrowserRouter>
+      <Route
+        path="/patient/dashboard"
+        element={<PatientDashboard />}
+      />
+
+      <Route
+        path="/patient/symptom-intake"
+        element={<SymptomIntake />}
+      />
+
+      <Route
+        path="/patient/cases/:caseId"
+        element={<TriageResult />}
+      />
+
+      <Route
+        path="/patient/history"
+        element={<PatientHistory />}
+      />
+
+      <Route
+        path="/patient/appointments"
+        element={<PatientAppointments />}
+      />
+
+      <Route
+        path="/staff/dashboard"
+        element={<StaffDashboard />}
+      />
+
+      <Route
+        path="/admin/dashboard"
+        element={<AdminDashboard />}
+      />
+
+      <Route
+        path="*"
+        element={<Navigate to="/login" replace />}
+      />
+    </Routes>
   );
 }
 
