@@ -57,10 +57,8 @@ public class AiTriageService {
             return response;
 
         } catch (RestClientException exception) {
-            System.err.println(
-                    "AI service unavailable: "
-                    + exception.getMessage()
-            );
+            org.slf4j.LoggerFactory.getLogger(AiTriageService.class)
+                    .warn("AI service unavailable", exception);
 
             return createFallbackResponse();
         }
