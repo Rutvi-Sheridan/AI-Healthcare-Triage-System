@@ -16,6 +16,32 @@ import com.healthcare.backend.repository.TriageCaseRepository;
 @Service
 public class TriageService {
 
+    private static final List<String> EMERGENCY_PHRASES = List.of(
+            "chest pain",
+            "pain in chest",
+            "chest discomfort",
+            "chest pressure",
+            "pressure in chest",
+            "chest tightness",
+            "tightness in chest",
+            "chest squeezing",
+            "chest heaviness",
+            "heart pain",
+            "pain in heart",
+            "pain in my heart",
+            "pain in the heart",
+            "pain around heart",
+            "pain around my heart",
+            "difficulty breathing",
+            "shortness of breath",
+            "cannot breathe",
+            "can't breathe",
+            "unconscious",
+            "severe bleeding",
+            "stroke",
+            "suicidal"
+    );
+
     private final TriageCaseRepository triageCaseRepository;
     private final PatientRepository patientRepository;
 
@@ -126,14 +152,9 @@ public class TriageService {
 
         String symptoms = complaint.toLowerCase();
 
-        boolean emergency =
-                symptoms.contains("chest pain")
-                || symptoms.contains("difficulty breathing")
-                || symptoms.contains("cannot breathe")
-                || symptoms.contains("unconscious")
-                || symptoms.contains("severe bleeding")
-                || symptoms.contains("stroke")
-                || symptoms.contains("suicidal");
+        boolean emergency = EMERGENCY_PHRASES
+                .stream()
+                .anyMatch(symptoms::contains);
 
         if (emergency) {
             return new Classification(
