@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Python / AI Service ###
+ai-service/venv/
+ai-service/.venv/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+### Environment Variables ###
+.env
+**/.env
