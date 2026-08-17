@@ -6,7 +6,7 @@ import "./PatientHistory.css";
 
 function PatientHistory() {
   const navigate = useNavigate();
-  const user = getCurrentUser();
+  const [user] = useState(() => getCurrentUser());
 
   const [cases, setCases] = useState([]);
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -47,7 +47,7 @@ function PatientHistory() {
     };
 
     loadCases();
-  }, [navigate, user?.patientId, user?.role]);
+  }, [navigate, user]);
 
   const filteredCases = useMemo(() => {
     return cases.filter((triageCase) => {
