@@ -14,6 +14,7 @@ import SymptomIntake from "./pages/SymptomIntake";
 import PatientHistory from "./pages/PatientHistory";
 import PatientAppointments from "./pages/PatientAppointments";
 import TriageResult from "./pages/TriageResult";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -23,7 +24,10 @@ function App() {
         element={<Navigate to="/login" replace />}
       />
 
+
       <Route path="/login" element={<Login />} />
+
+      <Route path="/register" element={<Register />} />
 
       <Route
         path="/patient/dashboard"
